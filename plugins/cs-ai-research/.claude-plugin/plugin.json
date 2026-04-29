@@ -1,0 +1,20 @@
+{
+  "name": "cs-ai-research",
+  "description": "Research craft for computer science and AI graduate students. Tier 1 covers research taste, paper deep reading, research narrative, experiment rigor, and peer review. Tier 2 covers evaluation thinking, reproducibility, LLM-as-research-tool, open-source release, and research collaboration.",
+  "version": "0.1.0",
+  "author": {
+    "name": "King-Wood-Shen"
+  },
+  "homepage": "https://github.com/King-Wood-Shen/campus-skills",
+  "repository": "https://github.com/King-Wood-Shen/campus-skills",
+  "license": "MIT",
+  "keywords": [
+    "computer-science",
+    "artificial-intelligence",
+    "machine-learning",
+    "research-methodology",
+    "graduate-research",
+    "experiment-design",
+    "peer-review"
+  ]
+}

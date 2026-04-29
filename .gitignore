@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+ENV/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Eval artifacts (raw run outputs are kept under each skill's evals/, but transient temp files are not)
+eval-harness/.cache/
+eval-harness/runs/
+*.tmp.jsonl
+
+# Secrets
+.env
+.env.local
+*.key
+
+# Build / dist
+dist/
+build/
+*.egg

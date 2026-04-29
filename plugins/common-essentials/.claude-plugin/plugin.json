@@ -1,0 +1,19 @@
+{
+  "name": "common-essentials",
+  "description": "Universal academic skills every university or graduate student needs, regardless of major. Covers literature review, academic writing, thesis defense preparation, professor email, CV/resume, grad school applications, and a meta-skill for authoring your own academic skills.",
+  "version": "0.1.0",
+  "author": {
+    "name": "King-Wood-Shen"
+  },
+  "homepage": "https://github.com/King-Wood-Shen/campus-skills",
+  "repository": "https://github.com/King-Wood-Shen/campus-skills",
+  "license": "MIT",
+  "keywords": [
+    "academic-writing",
+    "literature-review",
+    "graduate-school",
+    "research",
+    "thesis",
+    "students"
+  ]
+}

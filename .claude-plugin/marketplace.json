@@ -1,0 +1,27 @@
+{
+  "name": "campus-skills",
+  "description": "A research-methodology-grounded marketplace of Claude Code skills for university and graduate students across disciplines. Each skill is anchored to expert literature, validated with scenario test sets, scored by LLM-as-judge, and analyzed through component ablations.",
+  "owner": {
+    "name": "King-Wood-Shen"
+  },
+  "plugins": [
+    {
+      "name": "common-essentials",
+      "description": "Universal academic skills every student needs: literature review, academic writing, defense prep, applications, and more.",
+      "version": "0.1.0",
+      "source": "./plugins/common-essentials",
+      "author": {
+        "name": "King-Wood-Shen"
+      }
+    },
+    {
+      "name": "cs-ai-research",
+      "description": "Research craft for computer science and AI graduate students: experiment rigor, paper deep reading, research narrative, peer review, reproducibility.",
+      "version": "0.1.0",
+      "source": "./plugins/cs-ai-research",
+      "author": {
+        "name": "King-Wood-Shen"
+      }
+    }
+  ]
+}
