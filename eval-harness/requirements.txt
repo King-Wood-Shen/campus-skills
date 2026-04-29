@@ -1,1 +1,2 @@
-PyYAML>=6.0
+# PyYAML 6.0.2+ for Python 3.13/3.14 compatibility (collections.Hashable removal).
+PyYAML>=6.0.2
