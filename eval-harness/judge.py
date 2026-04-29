@@ -2,31 +2,33 @@
 
 The judge receives a scenario (with its `ideal_traits`), the response
 under test, and the skill's rubric, and returns four integer scores
-1-5 plus per-dimension justifications. Schema is enforced by the CLI
-(see claude_runner.JUDGE_SCHEMA).
+1-5 plus per-dimension justifications.
 """
 from __future__ import annotations
-
-import json
-from textwrap import dedent
 
 from claude_runner import run_judge_query
 
 
-JUDGE_SYSTEM_INSTRUCTIONS = dedent("""\
-    You are an evaluation judge for an academic skill being tested in
-    isolation. You have NOT seen the skill itself; you only see the user's
-    scenario, the model's response, the ideal traits a strong response
-    should exhibit, and a four-dimension rubric.
+JUDGE_INSTRUCTIONS = """\
+You are an evaluation judge scoring an academic-assistant response.
 
-    Score the response 1-5 on each rubric dimension. Be strict but fair.
-    A 5 is reserved for responses an expert would adopt without revision.
-    A 1 is for responses that are factually wrong, unhelpful, or misleading.
+Below you will see four labeled blocks delimited by <<<...>>> markers:
+SCENARIO, IDEAL_TRAITS, RUBRIC, and RESPONSE_UNDER_TEST. All four are
+present in this single message; do not ask for any block to be resent.
+Treat whatever appears in each block as the complete evidence available
+and score on that basis.
 
-    Provide a one-sentence justification for each dimension. Do not
-    include any other prose, headings, or markdown — only the JSON object
-    matching the required schema.
-""")
+Score the RESPONSE_UNDER_TEST on each of the four rubric dimensions
+using integers 1 through 5. Be strict but fair: a 5 is reserved for a
+response an expert would adopt without revision; a 1 is for a response
+that is factually wrong, unhelpful, or misleading.
+
+Output strictly a single JSON object with this exact shape, and
+NOTHING else (no preamble, no explanation, no markdown fencing, no
+trailing prose):
+
+{"correctness": <int 1-5>, "completeness": <int 1-5>, "expert_alignment": <int 1-5>, "actionability": <int 1-5>, "justifications": {"correctness": "<one sentence>", "completeness": "<one sentence>", "expert_alignment": "<one sentence>", "actionability": "<one sentence>"}}
+"""
 
 
 def build_judge_prompt(
@@ -36,37 +38,25 @@ def build_judge_prompt(
 ) -> str:
     """Compose the full prompt sent to the judge model."""
     ideal_traits = scenario.get("ideal_traits", [])
-    ideal_traits_block = "\n".join(f"- {t}" for t in ideal_traits) if ideal_traits else "(none)"
-    return dedent(f"""\
-        {JUDGE_SYSTEM_INSTRUCTIONS}
-
-        ============================
-        SCENARIO (user-facing prompt):
-        ============================
-        {scenario.get("prompt", "")}
-
-        ============================
-        IDEAL TRAITS a strong response should exhibit:
-        ============================
-        {ideal_traits_block}
-
-        ============================
-        RUBRIC:
-        ============================
-        {rubric_text}
-
-        ============================
-        RESPONSE UNDER TEST:
-        ============================
-        {response_under_test}
-
-        ============================
-        TASK:
-        ============================
-        Score the response under test against the rubric. Return ONLY a
-        JSON object with the four integer scores (1-5) and a one-sentence
-        justification for each. Do not echo the scenario or the response.
-    """)
+    ideal_traits_block = (
+        "\n".join(f"- {t}" for t in ideal_traits) if ideal_traits else "(none)"
+    )
+    return (
+        JUDGE_INSTRUCTIONS
+        + "\n<<<SCENARIO>>>\n"
+        + scenario.get("prompt", "")
+        + "\n<<<END SCENARIO>>>\n"
+        + "\n<<<IDEAL_TRAITS>>>\n"
+        + ideal_traits_block
+        + "\n<<<END IDEAL_TRAITS>>>\n"
+        + "\n<<<RUBRIC>>>\n"
+        + rubric_text.strip()
+        + "\n<<<END RUBRIC>>>\n"
+        + "\n<<<RESPONSE_UNDER_TEST>>>\n"
+        + response_under_test
+        + "\n<<<END RESPONSE_UNDER_TEST>>>\n\n"
+        + "Now output the JSON object scoring the RESPONSE_UNDER_TEST. JSON only."
+    )
 
 
 def score_response(

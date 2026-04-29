@@ -31,6 +31,16 @@ from pathlib import Path
 # Allow `python eval-harness/run_eval.py ...` from the repo root.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+# On Windows, the default console encoding (often GBK / cp936) cannot
+# encode replacement chars (U+FFFD) or non-CJK Unicode from model output.
+# Force stdout/stderr to UTF-8 so progress lines never crash the run.
+if sys.platform.startswith("win"):
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):
+            pass
+
 from ablation import ablation_conditions, pretty_condition
 from claude_runner import ClaudeError, run_user_query
 from judge import score_response
